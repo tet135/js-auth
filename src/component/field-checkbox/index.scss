@@ -1,0 +1,57 @@
+@use '../../style' as s;
+@use '../field/index' as field;
+
+.field--checkbox {
+	.field__wrapper {
+		border: 1px solid s.color(box);
+		padding: s.space(4);
+		border-radius: 10px;
+
+		
+		display: flex;
+		gap: s.space(2);
+		align-items: center;
+		line-height: 1em;
+
+		cursor: pointer;
+		transition: border-color 0.3s;
+
+		position: relative;
+
+		&:hover {
+			border-color: s.color(grey);
+		}
+		
+		//підтримка для тегу з атрибутом active просто або active=true
+		&[active] .field__icon {
+			background-image: url("/../../svg/checkbox-checked.svg");
+		}
+		
+		.field__icon {
+			display: block;
+			width: 14px;
+			height: 14px;		
+
+			position: absolute;
+			top: calc(50% - 7px);//  по центру батьківського тегу
+			left: s.space(4);
+
+			background-image: url("/../../svg/checkbox.svg");
+			background-repeat: no-repeat;
+			background-size: 12px 12px;
+			background-position: center center;
+		}
+
+		.field__label--checkbox {
+			padding-left: 24px;
+			color: s.color(dark);
+			font-size: 16px;
+		}
+	}
+
+	.field__input--disabled {
+		display: none;
+	}
+
+}
+

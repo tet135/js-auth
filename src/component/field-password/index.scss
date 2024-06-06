@@ -1,0 +1,44 @@
+@use '../../style' as s;
+@use '../field/index' as field;
+
+.field--password {
+	.field__wrapper {
+		width: 100%;
+		display: flex;
+		flex-direction: row;
+		justify-content: space-between;
+		align-items: center;
+		
+		position: relative;
+
+		& .field__input {
+			width: 100%;
+		}
+		
+		& .field__icon {
+			display: block;
+			width: 20px;
+			height: 20px;		
+
+			position: absolute;
+			top: calc(50% - 10px);
+			right: s.space(4);
+
+			background-image: url("/../../svg/eye-hiden.svg");
+			background-repeat: no-repeat;
+			background-size: cover;
+
+
+			//підтримка для тегу з атрибутом show просто або show=true
+			&[show] {
+				background-image: url("/../../svg/eye-open.svg");
+			}
+
+			@include s.click;
+		}
+	}
+
+
+}
+
+
