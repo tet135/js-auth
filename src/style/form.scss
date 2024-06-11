@@ -37,6 +37,17 @@
     &:active {
         opacity: 0.3;
     }
+
+    &--disabled {
+        cursor: default;
+        opacity: 0.5;
+
+        &:hover,
+        &:active {
+            cursor: default;
+            opacity: 0.5;
+        }
+    }
 }
 
 .alert {
@@ -59,5 +70,9 @@
     &--progress {
         border-color: s.color(blue);
         color: s.color(blue);
+    }
+
+    &--disabled {
+        display: none;
     }
 }
