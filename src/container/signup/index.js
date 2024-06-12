@@ -25,32 +25,6 @@ class SignupForm extends Form {
       'Ви не погоджуєтесь з умовами користування сайтом',
   }
 
-  ALERT = {
-    SUCCESS: 'Ви успішно пройшли реєстрацію',
-    ERROR: 'Під час реєстрації сталася помилка',
-    PROGRESS: 'Триває реєстрація. Зачекайте! ;)',
-    DISABLED: null,
-  }
-
-  //   &--success {
-  //     border-color: s.color(green);
-  //     color: s.color(green);
-  // }
-
-  // &--error {
-  //     border-color: s.color(red);
-  //     color: s.color(red);
-  // }
-
-  // &--progress {
-  //     border-color: s.color(blue);
-  //     color: s.color(blue);
-  // }
-
-  // &--disabled {
-  //     display: none;
-  // }
-
   validate = (name, value) => {
     //тут функціонал валідації значень
     if (String(value).length < 1) {
@@ -101,7 +75,7 @@ class SignupForm extends Form {
   }
 
   //функція для кнопки "Зареєструватия" для відправки даних на сервер через fetch, a не через button, type=submit
-  submit = () => {
+  submit = async () => {
     if (this.disabled === true) {
       this.validateAll()
     } else {
@@ -112,6 +86,27 @@ class SignupForm extends Form {
         'progress',
         'Завантаження. Зачекайте, будь-ласка!',
       )
+
+      try {
+        const res = await fetch('/signup', {
+          method: 'POST',
+          headers: {
+            'Content-Type': 'application/json',
+          },
+          body: this.convertData(),
+        })
+        //сюди приходить з route/auth.js/ res.status(200).json({
+        // message: 'Користувач успішно зареєстрований'
+        const data = await res.json()
+
+        if (res.ok) {
+          this.setAlert('success', data.message)
+        } else {
+          this.setAlert('error', data.message)
+        }
+      } catch (error) {
+        this.setAlert('error', error.message)
+      }
     }
   }
 

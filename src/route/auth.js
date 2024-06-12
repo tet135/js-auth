@@ -57,11 +57,13 @@ router.get('/signup', function (req, res) {
   // ↑↑ сюди вводимо JSON дані
 })
 
+//===============================
+
 //для відправки даних форми через fetch
-router.get('/signup', function (req, res) {
+router.post('/signup', function (req, res) {
   const { email, password, role } = req.body
 
-  console.log(req.body)
+  // console.log(req.body)
 
   if (!email || !password || !role) {
     return res.status(400).json({
