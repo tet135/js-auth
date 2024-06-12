@@ -1,4 +1,8 @@
-import { Form } from '../../script/form'
+import {
+  Form,
+  REG_EXP_EMAIL,
+  REG_EXP_PASSWORD,
+} from '../../script/form'
 
 class SignupForm extends Form {
   FIELD_NAME = {
@@ -21,26 +25,106 @@ class SignupForm extends Form {
       'Ви не погоджуєтесь з умовами користування сайтом',
   }
 
-  static validate = (name, value) => {
+  ALERT = {
+    SUCCESS: 'Ви успішно пройшли реєстрацію',
+    ERROR: 'Під час реєстрації сталася помилка',
+    PROGRESS: 'Триває реєстрація. Зачекайте! ;)',
+    DISABLED: null,
+  }
+
+  //   &--success {
+  //     border-color: s.color(green);
+  //     color: s.color(green);
+  // }
+
+  // &--error {
+  //     border-color: s.color(red);
+  //     color: s.color(red);
+  // }
+
+  // &--progress {
+  //     border-color: s.color(blue);
+  //     color: s.color(blue);
+  // }
+
+  // &--disabled {
+  //     display: none;
+  // }
+
+  validate = (name, value) => {
     //тут функціонал валідації значень
     if (String(value).length < 1) {
-      return FIELD_ERROR.IS_EMPTY
+      return this.FIELD_ERROR.IS_EMPTY
     }
 
-    // if (String(value).length > 20) {
-    //   return FIELD_ERROR.IS_BIG
-    // }
+    if (String(value).length > 30) {
+      return this.FIELD_ERROR.IS_BIG
+    }
 
-    // //for email field
-    // if (name === this.FIELD_NAME.EMAIL) {
-    //   return FIELD_ERROR.IS_BIG
-    // }
-    // //нічого не повертає, якщо всі поля ОК; повертає текст помилки, якщо його немає (underfined), то розуміємо, що всі поля введені коректно
+    // for email field
+    if (name === this.FIELD_NAME.EMAIL) {
+      if (!REG_EXP_EMAIL.test(String(value)))
+        return this.FIELD_ERROR.EMAIL
+    }
+
+    // for password field
+    if (name === this.FIELD_NAME.PASSWORD) {
+      if (!REG_EXP_PASSWORD.test(String(value)))
+        return this.FIELD_ERROR.PASSWORD
+    }
+
+    // for passwordAgain field
+    if (name === this.FIELD_NAME.PASSWORD_AGAIN) {
+      // const password =
+      //   document.getElementsByName('password')[0].value
+
+      // console.log(password)
+      if (
+        String(value) !==
+        this.value[this.FIELD_NAME.PASSWORD]
+      )
+        return this.FIELD_ERROR.PASSWORD_AGAIN
+    }
+
+    // for role
+    // просто перевірка на число. а на бекенді далі йде перевірка прописана в класі User.js
+    if (name === this.FIELD_NAME.ROLE) {
+      if (isNaN(value)) return this.FIELD_ERROR.ROLE
+    }
+
+    // for isConfirm
+    if (name === this.FIELD_NAME.IS_CONFIRM) {
+      if (Boolean(value) !== true)
+        return this.FIELD_ERROR.NOT_CONFIRM
+    }
+    //нічого не повертає, якщо всі поля ОК; повертає текст помилки, якщо його немає (underfined), то розуміємо, що всі поля введені коректно
   }
 
   //функція для кнопки "Зареєструватия" для відправки даних на сервер через fetch, a не через button, type=submit
-  static submit = () => {
-    console.log(this.value)
+  submit = () => {
+    if (this.disabled === true) {
+      this.validateAll()
+    } else {
+      //тут буде код відправки даних на сервер
+      console.log(this.value)
+
+      this.setAlert(
+        'progress',
+        'Завантаження. Зачекайте, будь-ласка!',
+      )
+    }
+  }
+
+  //готуємо дані для відправки на сервер
+  convertData = () => {
+    return JSON.stringify({
+      [this.FIELD_NAME.EMAIL]:
+        this.value[this.FIELD_NAME.EMAIL],
+      [this.FIELD_NAME.PASSWORD]:
+        this.value[this.FIELD_NAME.PASSWORD],
+      [this.FIELD_NAME.ROLE]:
+        this.value[this.FIELD_NAME.ROLE],
+    })
   }
 }
 

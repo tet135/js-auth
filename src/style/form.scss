@@ -76,3 +76,10 @@
         display: none;
     }
 }
+
+.validation {
+    &--active {
+        //important забезпечить червоний колір бордера поля доки не буде введено  коректного значення. перебиває кольори на фокусу, active тощо
+        border-color: s.color(red) !important;
+    }
+}
