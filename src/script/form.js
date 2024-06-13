@@ -1,5 +1,3 @@
-import { response } from 'express'
-
 //з прапорцями не працюэ валідація???
 const regexpEmail = /^[\w-\.]+@([\w-]+\.)+[\w-]{2,4}$/
 
