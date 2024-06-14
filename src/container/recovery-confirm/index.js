@@ -30,12 +30,6 @@ class RecoveryConfirmForm extends Form {
       return this.FIELD_ERROR.IS_BIG
     }
 
-    // for email field
-    if (name === this.FIELD_NAME.EMAIL) {
-      if (!REG_EXP_EMAIL.test(String(value)))
-        return this.FIELD_ERROR.EMAIL
-    }
-
     // for password field
     if (name === this.FIELD_NAME.PASSWORD) {
       if (!REG_EXP_PASSWORD.test(String(value)))
@@ -53,18 +47,6 @@ class RecoveryConfirmForm extends Form {
         this.value[this.FIELD_NAME.PASSWORD]
       )
         return this.FIELD_ERROR.PASSWORD_AGAIN
-    }
-
-    // for role
-    // просто перевірка на число. а на бекенді далі йде перевірка прописана в класі User.js
-    if (name === this.FIELD_NAME.ROLE) {
-      if (isNaN(value)) return this.FIELD_ERROR.ROLE
-    }
-
-    // for isConfirm
-    if (name === this.FIELD_NAME.IS_CONFIRM) {
-      if (Boolean(value) !== true)
-        return this.FIELD_ERROR.NOT_CONFIRM
     }
     //нічого не повертає, якщо всі поля ОК; повертає текст помилки, якщо його немає (underfined), то розуміємо, що всі поля введені коректно
   }

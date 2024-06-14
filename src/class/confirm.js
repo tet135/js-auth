@@ -21,7 +21,8 @@ class Confirm {
   }
 
   static delete = (code) => {
-    const length = this.#list.length
+    //this.#list.length ???????????
+    const length = this.#list
 
     this.#list = this.#list.filter(
       (item) => item.code !== code,

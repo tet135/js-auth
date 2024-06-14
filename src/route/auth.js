@@ -146,7 +146,7 @@ router.post('/recovery', function (req, res) {
 //===============================
 
 router.get('/recovery-confirm', function (req, res) {
-  res.render('recovery-confirm', {
+  return res.render('recovery-confirm', {
     name: 'recovery-confirm',
     component: ['back-button', 'field', 'field-password'],
     title: 'Recovery confirm page',
@@ -157,6 +157,43 @@ router.get('/recovery-confirm', function (req, res) {
 router.post('/recovery-confirm', function (req, res) {
   const { code, password } = req.body
   console.log(code, password)
+
+  if (!code || !password) {
+    return res.status(400).json({
+      message: "Помилка. Обов'язкові поля відсутні",
+    })
+  }
+
+  try {
+    const email = Confirm.getData(Number(code))
+
+    if (!email) {
+      return res.status(400).json({
+        message: 'Код не дійсний',
+      })
+    }
+
+    const user = User.getByEmail(email)
+
+    if (!user) {
+      return res.status(400).json({
+        message:
+          'Помилка. Користувача з таким email не існує',
+      })
+    }
+
+    user.password = password // поки так, але пароль на бэкэнді не зберігають в неконвертованому вигляді!
+
+    console.log(user)
+
+    return res.status(200).json({
+      message: 'Пароль успішно змінено',
+    })
+  } catch (err) {
+    return res.status(400).json({
+      message: err.message,
+    })
+  }
 })
 
 //===============================

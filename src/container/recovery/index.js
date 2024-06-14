@@ -44,7 +44,7 @@ class RecoveryForm extends Form {
       )
 
       try {
-        const res = await fetch('/recovery-confirm', {
+        const res = await fetch('/recovery', {
           method: 'POST',
           headers: {
             'Content-Type': 'application/json',
