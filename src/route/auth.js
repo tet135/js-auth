@@ -4,9 +4,10 @@ const express = require('express')
 const router = express.Router()
 
 const { User } = require('../class/user')
+const { Confirm } = require('../class/confirm')
 
 User.create({
-  email: 'test@gmail.com',
+  email: 'test@mail.com',
   password: 123,
   role: 1,
 })
@@ -74,11 +75,20 @@ router.post('/signup', function (req, res) {
   try {
     //тут основний код ендпоїнта: реєстрація користувача. Це БІЗНЕС-ЛОГІКА!!!
     // Її завжди треба обробити через try-catch, щоб уникнути поламки сервера, убезпечитися від помилок
+    const user = User.getByEmail(email)
+    if (user) {
+      return res.status(400).json({
+        message:
+          'Помилка. Користувач з таким email вже існує',
+      })
+    }
     User.create({ email, password, role })
 
     return res.status(200).json({
       message: 'Користувач успішно зареєстрований',
       // data:....
+
+      //тут логіка кодування паролю: до певного коду прив'язується об'єкт юзер(з його email). Технологія Redis
     })
   } catch (err) {
     return res.status(400).json({
@@ -88,5 +98,67 @@ router.post('/signup', function (req, res) {
   }
 })
 
+// ================================================================
+
+// ↙️ тут вводимо шлях (PATH) до сторінки
+router.get('/recovery', function (req, res) {
+  res.render('recovery', {
+    name: 'recovery',
+    component: ['back-button', 'field'],
+    title: 'Recovery page',
+    data: {},
+  })
+  // ↑↑ сюди вводимо JSON дані
+})
+// ====================================
+router.post('/recovery', function (req, res) {
+  const { email } = req.body
+  console.log(email)
+
+  if (!email) {
+    return res.status(400).json({
+      message: "Помилка. Обов'язкові поля відсутні",
+    })
+  }
+
+  try {
+    const user = User.getByEmail(email)
+
+    if (!user) {
+      return res.status(400).json({
+        message:
+          'Помилка. Користувача з таким email не існує',
+      })
+    }
+
+    Confirm.create(email)
+
+    return res.status(200).json({
+      message: 'Код для відновлення паролю відправлено',
+    })
+  } catch (error) {
+    return res.status(400).json({
+      message: err.message,
+    })
+  }
+})
+
+//===============================
+
+router.get('/recovery-confirm', function (req, res) {
+  res.render('recovery-confirm', {
+    name: 'recovery-confirm',
+    component: ['back-button', 'field', 'field-password'],
+    title: 'Recovery confirm page',
+    data: {},
+  })
+})
+//================
+router.post('/recovery-confirm', function (req, res) {
+  const { code, password } = req.body
+  console.log(code, password)
+})
+
+//===============================
 // Підключаємо роутер до бек-енду
 module.exports = router
