@@ -83,3 +83,12 @@
         border-color: s.color(red) !important;
     }
 }
+
+.link__prefix {
+ color: s.color(light);
+}
+
+.link {
+    color: s.color(main);
+    @include s.click;
+}

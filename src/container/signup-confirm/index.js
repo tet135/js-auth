@@ -1,20 +1,19 @@
-import { Form, REG_EXP_PASSWORD } from '../../script/form'
-import { saveSession } from '../../script/session'
+import { Form } from '../../script/form'
+import {
+  getSession,
+  getTokenSession,
+  saveSession,
+} from '../../script/session'
 
-class RecoveryConfirmForm extends Form {
+class SignupConfirmForm extends Form {
   FIELD_NAME = {
     CODE: 'code',
-    PASSWORD: 'password',
-    PASSWORD_AGAIN: 'passwordAgain',
   }
 
   FIELD_ERROR = {
     IS_EMPTY: 'Введіть значення в поле',
     IS_BIG: 'Значення дуже довге, скоротіть його',
     //code не валідуємо, щоб не підказувати формат введення коду для злодюжок
-    PASSWORD:
-      'Пароль має складатися з 8 або більше символів, в т.ч. малі і великі літери, хоча б одну цифру',
-    PASSWORD_AGAIN: 'Паролі не збігаються',
   }
 
   validate = (name, value) => {
@@ -27,24 +26,6 @@ class RecoveryConfirmForm extends Form {
       return this.FIELD_ERROR.IS_BIG
     }
 
-    // for password field
-    if (name === this.FIELD_NAME.PASSWORD) {
-      if (!REG_EXP_PASSWORD.test(String(value)))
-        return this.FIELD_ERROR.PASSWORD
-    }
-
-    // for passwordAgain field
-    if (name === this.FIELD_NAME.PASSWORD_AGAIN) {
-      // const password =
-      //   document.getElementsByName('password')[0].value
-
-      // console.log(password)
-      if (
-        String(value) !==
-        this.value[this.FIELD_NAME.PASSWORD]
-      )
-        return this.FIELD_ERROR.PASSWORD_AGAIN
-    }
     //нічого не повертає, якщо всі поля ОК; повертає текст помилки, якщо його немає (underfined), то розуміємо, що всі поля введені коректно
   }
 
@@ -62,7 +43,7 @@ class RecoveryConfirmForm extends Form {
       )
 
       try {
-        const res = await fetch('/recovery-confirm', {
+        const res = await fetch('/signup-confirm', {
           method: 'POST',
           headers: {
             'Content-Type': 'application/json',
@@ -92,23 +73,22 @@ class RecoveryConfirmForm extends Form {
       [this.FIELD_NAME.CODE]: Number(
         this.value[this.FIELD_NAME.CODE],
       ),
-      [this.FIELD_NAME.PASSWORD]:
-        this.value[this.FIELD_NAME.PASSWORD],
+      token: getTokenSession(),
     })
   }
 }
 
 //треба дописувати new щоб підтяглись поля з Form
-window.recoveryConfirmForm = new RecoveryConfirmForm()
+window.signupConfirmForm = new SignupConfirmForm()
 
-document.addEventListener('DOMContentLoaded', () => {
-  try {
-    if (window.session) {
-      if (window.session.user.isConfirm) {
-        location.assign('/')
-      }
-    } else {
-      location.assign('/')
-    }
-  } catch (error) {}
-})
+document
+  .querySelector('#renew')
+  .addEventListener('click', (e) => {
+    e.preventDefault()
+
+    const session = getSession()
+
+    location.assign(
+      `/signup-confirm?renew=true&email=${session.user.email}`,
+    )
+  })

@@ -1,20 +1,17 @@
-import { Form, REG_EXP_PASSWORD } from '../../script/form'
+import { Form, REG_EXP_EMAIL } from '../../script/form'
+
 import { saveSession } from '../../script/session'
 
-class RecoveryConfirmForm extends Form {
+class LoginForm extends Form {
   FIELD_NAME = {
-    CODE: 'code',
+    EMAIL: 'email',
     PASSWORD: 'password',
-    PASSWORD_AGAIN: 'passwordAgain',
   }
 
   FIELD_ERROR = {
     IS_EMPTY: 'Введіть значення в поле',
     IS_BIG: 'Значення дуже довге, скоротіть його',
-    //code не валідуємо, щоб не підказувати формат введення коду для злодюжок
-    PASSWORD:
-      'Пароль має складатися з 8 або більше символів, в т.ч. малі і великі літери, хоча б одну цифру',
-    PASSWORD_AGAIN: 'Паролі не збігаються',
+    EMAIL: 'Введіть коректне значення електронної пошти',
   }
 
   validate = (name, value) => {
@@ -27,23 +24,10 @@ class RecoveryConfirmForm extends Form {
       return this.FIELD_ERROR.IS_BIG
     }
 
-    // for password field
-    if (name === this.FIELD_NAME.PASSWORD) {
-      if (!REG_EXP_PASSWORD.test(String(value)))
-        return this.FIELD_ERROR.PASSWORD
-    }
-
-    // for passwordAgain field
-    if (name === this.FIELD_NAME.PASSWORD_AGAIN) {
-      // const password =
-      //   document.getElementsByName('password')[0].value
-
-      // console.log(password)
-      if (
-        String(value) !==
-        this.value[this.FIELD_NAME.PASSWORD]
-      )
-        return this.FIELD_ERROR.PASSWORD_AGAIN
+    // for email field
+    if (name === this.FIELD_NAME.EMAIL) {
+      if (!REG_EXP_EMAIL.test(String(value)))
+        return this.FIELD_ERROR.EMAIL
     }
     //нічого не повертає, якщо всі поля ОК; повертає текст помилки, якщо його немає (underfined), то розуміємо, що всі поля введені коректно
   }
@@ -53,16 +37,16 @@ class RecoveryConfirmForm extends Form {
     if (this.disabled === true) {
       this.validateAll()
     } else {
-      // console.log(this.value)
-
       //тут буде код відправки даних на сервер
+      console.log(this.value)
+
       this.setAlert(
         'progress',
         'Завантаження. Зачекайте, будь-ласка!',
       )
 
       try {
-        const res = await fetch('/recovery-confirm', {
+        const res = await fetch('/login', {
           method: 'POST',
           headers: {
             'Content-Type': 'application/json',
@@ -89,9 +73,8 @@ class RecoveryConfirmForm extends Form {
   //готуємо дані для відправки на сервер
   convertData = () => {
     return JSON.stringify({
-      [this.FIELD_NAME.CODE]: Number(
-        this.value[this.FIELD_NAME.CODE],
-      ),
+      [this.FIELD_NAME.EMAIL]:
+        this.value[this.FIELD_NAME.EMAIL],
       [this.FIELD_NAME.PASSWORD]:
         this.value[this.FIELD_NAME.PASSWORD],
     })
@@ -99,16 +82,10 @@ class RecoveryConfirmForm extends Form {
 }
 
 //треба дописувати new щоб підтяглись поля з Form
-window.recoveryConfirmForm = new RecoveryConfirmForm()
+window.loginForm = new LoginForm()
 
 document.addEventListener('DOMContentLoaded', () => {
-  try {
-    if (window.session) {
-      if (window.session.user.isConfirm) {
-        location.assign('/')
-      }
-    } else {
-      location.assign('/')
-    }
-  } catch (error) {}
+  if (window.session) {
+    location.assign('/')
+  }
 })

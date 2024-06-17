@@ -1,0 +1,42 @@
+{{!
+Це код container файлу для index сторінки,
+в якому міститься код, котрий буде віддаватися по шляху (PATH) - "/"
+}}
+
+<div class="page page--background">
+    <header>
+        {{>back-button}}
+    </header>
+
+    <form class="page__section">
+        <h1 class="page__title">Вхід</h1>
+        <div class="form">
+            <div class="form__item">
+                {{>field action="loginForm.change" label="Eл.адреса" type="email" name="email"
+                placeholder="name@gmail.com"}}
+                <span class="form__error" name="email">Помилка</span>
+            </div>
+
+            <div class="form__item">
+                {{>field-password action="signupForm.change" label="Пароль" type="password" name="password"
+                placeholder="Введіть пароль"}}
+                <span class="form__error" name="password">Помилка</span>
+            </div>
+
+        </div>
+        {{!-- події прив'язуємо до тега через атрибут --}}
+        <button onclick="loginForm.submit()" class="button button--disabled" type="button">Увійти</button>
+        <span class="alert alert--disabled">Увага, при реєстрації сталася помилка</span>
+        <span class="link__prefix">
+            Забули пароль?
+            <a href="/recovery" class="link">Відновити</a>
+        </span>
+    </form>
+</div>
+
+{{!
+Цей код містить лише те, що буде виводитись в
+
+<body>
+    Адже наш layout/default.hbs має вже структуру HTML
+    }}
