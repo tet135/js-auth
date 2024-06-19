@@ -6,7 +6,7 @@ class UserList extends List {
     //super() - щоб працював конструктор батьківського List, якщо він там є
     super()
 
-    this.element = document.querySelector('#user-list')
+    this.element = document.querySelector(`#user-list`)
     if (!this.element) throw new Error('Element is null')
 
     this.loadData()
@@ -14,6 +14,8 @@ class UserList extends List {
 
   loadData = async () => {
     this.updateStatus(this.STATE.LOADING)
+
+    // return null
 
     try {
       const res = await fetch('/user-list-data', {
@@ -49,7 +51,44 @@ class UserList extends List {
   }
 
   updateView = () => {
-    console.log(this.status, this.data)
+    this.element.innerHTML = ''
+    console.log(this.status, this.data) //не приходит!!!!!!
+
+    switch (this.status) {
+      case this.STATE.LOADING:
+        this.element.innerHTML = `
+          <div class="user">
+            <span class="user__title skeleton"></span>
+            <span class="user__subtitle skeleton"></span>
+          </div>
+
+          <div class="user">
+            <span class="user__title skeleton"></span>
+            <span class="user__subtitle skeleton"></span>
+          </div>
+
+          <div class="user">
+            <span class="user__title skeleton"></span>
+            <span class="user__subtitle skeleton"></span>
+          </div>
+          `
+        break
+      case this.STATE.SUCCESS:
+        this.data.list.forEach((item) => {
+          this.element.innerHTML += `
+          <a href="/user-item?id=${item.id}" class="user user--click">
+            <span class="user__title">${item.email}</span>
+            <span class="user__subtitle">${item.role}</span>
+          </a>
+          `
+        })
+        break
+      case this.STATE.ERROR:
+        this.element.innerHTML = `
+        <span class="alert alert--error">${this.data.message}</span>
+        `
+        break
+    }
   }
 }
 
