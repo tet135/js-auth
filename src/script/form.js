@@ -1,16 +1,24 @@
+export const REG_EXP_EMAIL = new RegExp(
+  /^[\w-\.]+@([\w-]+\.)+[\w-]{2,4}$/g,
+)
+
+export const REG_EXP_PASSWORD = new RegExp(
+  /^(?=.*\d)(?=.*[a-z])(?=.*[A-Z])(?=.*[a-zA-Z]).{8,}$/g,
+)
+
 //з прапорцями не працюэ валідація???
-const regexpEmail = /^[\w-\.]+@([\w-]+\.)+[\w-]{2,4}$/
+// const regexpEmail = /^[\w-\.]+@([\w-]+\.)+[\w-]{2,4}$/
 
-//prittier чомусь коригує сам вираз якщо писати його всерединуnew RegExp(...)
-export const REG_EXP_EMAIL = new RegExp(regexpEmail)
+// //prittier чомусь коригує сам вираз якщо писати його всерединуnew RegExp(...)
+// export const REG_EXP_EMAIL = new RegExp(regexpEmail)
 
-// console.log(REG_EXP_EMAIL)
+// // console.log(REG_EXP_EMAIL)
 
-const regexpPassword =
-  /^(?=.*\d)(?=.*[a-z])(?=.*[A-Z])(?=.*[a-zA-Z]).{8,}$/
+// const regexpPassword =
+//   /^(?=.*\d)(?=.*[a-z])(?=.*[A-Z])(?=.*[a-zA-Z]).{8,}$/
 
-export const REG_EXP_PASSWORD = RegExp(regexpPassword)
-// console.log(REG_EXP_PASSWORD)
+// export const REG_EXP_PASSWORD = RegExp(regexpPassword)
+// // console.log(REG_EXP_PASSWORD)
 
 //це базовий абстрактний класс який далі перевикористовується, перезаписується
 export class Form {

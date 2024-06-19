@@ -30,13 +30,29 @@ body {
 	padding: s.space(8) s.space(6);
 	gap: s.space(8);
 
-	background-image: url(/img/background.jpg);
-	background-position: top right;
-	background-repeat: no-repeat;
-
 	display: grid;
 	//1 рядок - для стрілочки, а форма - весь доступний простір
 	grid-template-rows: auto 1fr;
+
+	&--background {	
+		background-image: url(/img/background.jpg);
+		background-position: top right;
+		background-repeat: no-repeat;
+	}
+
+	&--top {
+		display: flex;
+		flex-direction: column;	
+	}
+
+	&__divider {
+		display: block;
+		margin: 0;
+		height: 1px;
+		background-color: s.color(divider);
+		border: none;
+		width: 100%;
+	}
 
 	&__title {
 		font-size: 24px;

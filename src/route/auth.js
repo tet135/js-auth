@@ -313,43 +313,6 @@ router.post('/login', function (req, res) {
       message: err.message,
     })
   }
-
-  // try {
-  //   const session = Session.get(token)
-
-  //   if (!session) {
-  //     return res.status(400).json({
-  //       message: 'Помилка. Ви не увійшли в аккаунт',
-  //     })
-  //   }
-
-  //   const email = Confirm.getData(code)
-
-  //   if (!email) {
-  //     return res.status(400).json({
-  //       message: 'Помилка. Такий код не існує',
-  //     })
-  //   }
-
-  //   if (email !== session.user.email) {
-  //     return res.status(400).json({
-  //       message: 'Помилка. Код не дійсний',
-  //     })
-  //   }
-
-  //   const user = User.getByEmail(session.user.email)
-  //   user.isConfirm = true
-  //   session.user.isConfirm = true
-
-  //   return res.status(200).json({
-  //     message: 'Ви підтвертдили свою пошту',
-  //     session,
-  //   })
-  // } catch (err) {
-  //   return res.status(400).json({
-  //     message: err.message,
-  //   })
-  // }
 })
 
 //===============================
