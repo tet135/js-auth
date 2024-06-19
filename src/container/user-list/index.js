@@ -1,5 +1,5 @@
 import { List } from '../../script/list'
-import { USER_ROLE } from '../../route/user'
+import { USER_ROLE } from '../../script/user'
 
 class UserList extends List {
   constructor() {
@@ -52,7 +52,7 @@ class UserList extends List {
 
   updateView = () => {
     this.element.innerHTML = ''
-    console.log(this.status, this.data) //не приходит!!!!!!
+    console.log(this.status, this.data)
 
     switch (this.status) {
       case this.STATE.LOADING:
